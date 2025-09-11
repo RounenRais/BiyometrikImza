@@ -1,0 +1,258 @@
+React ile Proje Oluşturma Rehberi
+
+Ön Koşullar:
+
+Node.js (LTS) yüklü olmalı → node -v
+
+Paket yöneticisi: npm -v (veya pnpm -v / yarn -v)
+
+1) Önerilen Yol: Vite ile React Projesi
+
+Vite hızlı geliştirme sunar ve modern React projeleri için önerilir.
+
+1.1 Proje oluştur
+# JavaScript
+npm create vite@latest my-react-app -- --template react
+
+# TypeScript (önerilir)
+npm create vite@latest my-react-app -- --template react-ts
+
+
+pnpm veya yarn kullanıyorsan npm komutlarını karşılığıyla değiştir.
+
+1.2 Bağımlılıkları kur ve çalıştır
+cd my-react-app
+npm install
+npm run dev
+
+
+Terminalde yerel adresi görürsün, genelde: http://localhost:5173
+
+2) Alternatif: Create React App (CRA)
+
+Not: Yeni projelerde Vite tercih edilir. CRA hâlâ çalışır ama daha yavaştır.
+
+# JavaScript
+npx create-react-app my-react-app
+
+# TypeScript
+npx create-react-app my-react-app --template typescript
+
+
+Çalıştır:
+
+cd my-react-app
+npm start
+
+
+Adres: http://localhost:3000
+
+3) Klasör Yapısı (Vite + TS örneği)
+my-react-app/
+├─ src/
+│  ├─ assets/            ← görseller, stiller
+│  ├─ components/        ← tekrar kullanılabilir bileşenler
+│  ├─ pages/             ← sayfalar (router kullanıyorsan)
+│  ├─ App.tsx
+│  ├─ main.tsx
+│  └─ index.css
+├─ public/
+├─ tsconfig.json
+├─ package.json
+└─ vite.config.ts
+
+4) Basit Bileşen Oluşturma
+
+src/components/Hello.tsx:
+
+type Props = { name: string };
+
+export default function Hello({ name }: Props) {
+  return <h2>Merhaba, {name}!</h2>;
+}
+
+
+src/App.tsx içinde kullan:
+
+import Hello from "./components/Hello";
+
+export default function App() {
+  return (
+    <main>
+      <h1>React Uygulaması</h1>
+      <Hello name="Dünya" />
+    </main>
+  );
+}
+
+5) Durum (State) Yönetimi – useState Örneği
+
+src/components/Counter.tsx:
+
+import { useState } from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p>Sayaç: {count}</p>
+      <button onClick={() => setCount((c) => c + 1)}>Arttır</button>
+    </div>
+  );
+}
+
+
+App.tsx:
+
+import Counter from "./components/Counter";
+/* ... */
+<Counter />
+
+6) Basit Veri Çekme (Fetch) – useEffect
+
+src/components/TodoList.tsx:
+
+import { useEffect, useState } from "react";
+
+type Todo = { id: number; title: string; completed: boolean };
+
+export default function TodoList() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/todos?_limit=5")
+      .then((r) => r.json())
+      .then((data: Todo[]) => setTodos(data))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <p>Yükleniyor...</p>;
+
+  return (
+    <ul>
+      {todos.map((t) => (
+        <li key={t.id}>
+          <input type="checkbox" checked={t.completed} readOnly /> {t.title}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+
+App.tsx:
+
+import TodoList from "./components/TodoList";
+/* ... */
+<TodoList />
+
+7) (Opsiyonel) React Router Kurulumu
+npm install react-router-dom
+
+
+src/main.tsx (Vite + TS):
+
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import App from "./App";
+import "./index.css";
+
+function Hakkimizda() {
+  return <h2>Hakkımızda</h2>;
+}
+
+const router = createBrowserRouter([
+  { path: "/", element: <App /> },
+  { path: "/hakkimizda", element: <Hakkimizda /> },
+]);
+
+createRoot(document.getElementById("root")!).render(
+  <RouterProvider router={router} />
+);
+
+
+Artık / ve /hakkimizda rotaları çalışır.
+
+8) (Opsiyonel) Tailwind CSS Entegrasyonu (Vite)
+
+Kur:
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+
+tailwind.config.js içerik ayarı:
+
+export default {
+  content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+  theme: { extend: {} },
+  plugins: [],
+};
+
+
+src/index.css başına ekle:
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+Örnek buton:
+
+<button className="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700">
+  Tıkla
+</button>
+
+9) Ortam Değişkenleri
+
+Vite’ta .env dosyasında değişkenler VITE_ ile başlamalıdır:
+
+VITE_API_URL=https://api.ornek.com
+
+
+Kullanım:
+
+const api = import.meta.env.VITE_API_URL;
+
+10) Script’ler ve Build
+
+Geliştirme:
+
+npm run dev
+
+
+Üretim (build):
+
+npm run build
+
+
+Önizleme:
+
+npm run preview
+
+
+Çıktı klasörü Vite’ta dist/ olur. Statik sunucu veya hizmet (Vercel, Netlify, GitHub Pages) ile yayınlayabilirsin.
+
+11) Kod Kalitesi (Opsiyonel)
+
+ESLint ve Prettier kurulumu (Vite + TS proje için örnek):
+
+npm install -D eslint prettier eslint-config-prettier eslint-plugin-react-hooks @types/eslint
+
+
+.eslintrc ve .prettierrc dosyalarıyla kuralları yapılandırabilirsin.
+
+12) Özet
+
+Vite ile hızlı başlangıç: npm create vite@latest my-react-app -- --template react-ts
+
+npm run dev ile geliştirme sunucusu
+
+Bileşenleri src/components’ta tut, sayfaları src/pages’e ayır (router ile)
+
+useState, useEffect ile durum ve veri çekme
+
+Tailwind/ESLint gibi araçlarla kalite ve stil
+
+npm run build ile üretim paketini hazırla
