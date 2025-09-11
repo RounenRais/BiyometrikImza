@@ -1,0 +1,127 @@
+Next.js ile Proje Oluşturma Rehberi
+
+Ön Koşullar:
+
+Node.js (LTS sürümü) yüklü olmalı. Kontrol: node -v
+
+npm veya yarn kurulu olmalı. Kontrol: npm -v
+
+1️⃣ Yeni Next.js Projesi Başlatma
+
+Terminalde şu komutu çalıştır:
+
+npx create-next-app@latest my-next-app
+
+
+Kurulum sırasında sana birkaç soru sorar:
+
+TypeScript? → Evet (önerilir)
+
+ESLint? → Evet
+
+Tailwind? → İstersen evet (tasarımı kolaylaştırır)
+
+src/ directory? → Evet (daha düzenli yapı)
+
+App Router? → Evet (Next 13+ için modern yaklaşım)
+
+Bittiğinde my-next-app/ adında bir klasör oluşur.
+
+2️⃣ Projeyi Çalıştırma
+cd my-next-app
+npm run dev
+
+
+Terminal çıktısında şunu göreceksin:
+
+Local: http://localhost:3000
+
+
+Tarayıcıda bu adrese gidince başlangıç sayfası açılır.
+
+3️⃣ Klasör Yapısını Anlamak
+my-next-app/
+├─ app/
+│  ├─ page.tsx        ← Ana sayfa
+│  ├─ layout.tsx      ← Layout bileşeni
+│  └─ globals.css     ← Global stiller
+├─ public/            ← Görseller, statik dosyalar
+├─ package.json
+└─ next.config.mjs
+
+
+app/page.tsx → Ana sayfa bileşeni
+
+app/layout.tsx → Tüm sayfalar için ortak layout
+
+public/ → Logo, ikon, statik dosyalar
+
+4️⃣ Örnek Bir Sayfa Eklemek
+
+Yeni bir sayfa oluşturmak için:
+
+mkdir app/hakkimizda
+touch app/hakkimizda/page.tsx
+
+
+page.tsx dosyasına şu içeriği ekle:
+
+export default function Hakkimizda() {
+  return <h1>Hakkımızda Sayfası</h1>;
+}
+
+
+Sonra tarayıcıdan http://localhost:3000/hakkimizda adresine giderek yeni sayfayı görebilirsin.
+
+5️⃣ Basit Bir API Route (Opsiyonel)
+
+API oluşturmak için:
+
+mkdir app/api/selam
+touch app/api/selam/route.ts
+
+
+route.ts dosyasına şunu yaz:
+
+import { NextResponse } from 'next/server';
+
+export async function GET() {
+  return NextResponse.json({ mesaj: "Merhaba Next.js!" });
+}
+
+
+Artık http://localhost:3000/api/selam adresine gidince JSON çıktısı görürsün.
+
+6️⃣ Tailwind ile Basit Buton Örneği (Opsiyonel)
+
+Eğer kurulumda Tailwind seçtiysen app/page.tsx dosyanı şu şekilde düzenleyebilirsin:
+
+export default function Home() {
+  return (
+    <main className="flex flex-col items-center justify-center h-screen bg-gray-50">
+      <h1 className="text-3xl font-bold text-blue-600">Merhaba Next.js!</h1>
+      <button className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600">
+        Tıkla
+      </button>
+    </main>
+  );
+}
+
+
+Sayfayı yenilediğinde ortada bir başlık ve buton görürsün.
+
+7️⃣ Özet
+
+npx create-next-app → Proje oluşturur
+
+npm run dev → Localde çalıştırır
+
+app/ klasöründe sayfa klasörleri oluşturarak yeni sayfalar eklenir
+
+public/ klasörü statik dosyalar içindir
+
+API route’ları app/api/ altında oluşturulur
+
+Tailwind ile kolayca şık bileşenler eklenebilir
+
+Bu metni tek parça olarak .txt veya .md dosyasına yapıştı
