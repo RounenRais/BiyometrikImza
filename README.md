@@ -1,2 +1,2 @@
 # BiyometrikImza
-Branchleri kullanarak proje ve kullanılan kaynaklarla ilgili istediğiniz bölüme gidebilirsiniz.
+Branchleri kullanarak proje ve kullanılan eğitimlerle ilgili istediğiniz bölüme gidebilirsiniz.
